@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 function Movieform({ movieList, setMovieList, filterList, setFilterList }) {
   const [movie, setMovie] = useState({
     name: '',
@@ -6,6 +6,7 @@ function Movieform({ movieList, setMovieList, filterList, setFilterList }) {
     duration: 0,
   })
   const [error, setError] = useState({ status: false, message: '' });
+  const [flag, setFlag] = useState(true);
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -21,18 +22,28 @@ function Movieform({ movieList, setMovieList, filterList, setFilterList }) {
     }
 
     if (movie.duration.endsWith("m")) {
-      let durationInHrs = movie.duration.slice(0, movie.duration.length - 1)
-      setMovie({ ...movie, duration: durationInHrs / 60 })
+      let durationInHrs = movie.duration.slice(0, movie.duration.length - 1) / 60
+      setMovie({ ...movie, duration: durationInHrs.toFixed(1) })
+      setFlag(false)
+      return
     }
     else if (!movie.duration.endsWith("h")) {
       setError({ status: true, message: 'Please specify time in hours or minutes (e.g. 2.5h or 150m)' })
       return;
     }
 
-    setMovieList([...movieList, movie])
-    setFilterList([...filterList, movie])
+    let durationInHrs = movie.duration.slice(0, movie.duration.length - 1)
+    setMovie({ ...movie, duration: durationInHrs })
+    setFlag(false)
   };
 
+  useEffect(() => {
+    if (!flag) {
+      setMovieList([...movieList, movie])
+      setFilterList([...filterList, movie])
+      setFlag(true)
+    }
+  }, [flag])
   return (
     <section>
       <div className='card pa-30'>

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 function Search({ movieList, setMovieList, filterList, setSearchQuery }) {
   const searchHandle = (e) => {
     if (e.target.value.length >= 2) {
-      setMovieList(filterList.filter((movie) => (movie.name.includes(e.target.value))))
+      setMovieList(filterList.filter((movie) => (movie.name.toLowerCase().includes(e.target.value.toLowerCase()))))
     }
 
     if (!e.target.value.length) {
@@ -13,7 +13,7 @@ function Search({ movieList, setMovieList, filterList, setSearchQuery }) {
     if (e.target.value.length <= 1)
       setSearchQuery(false)
 
-    if (e.target.value.length >= 1 && !movieList.length)
+    if (e.target.value.length >= 2 && !movieList.length)
       setSearchQuery(true)
 
   }
